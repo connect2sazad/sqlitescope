@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation — SQLiteScope</title>
+<meta name="description" content="Install, run, and use SQLiteScope: quick start, SQL console, schema tools, themes, safety model, and known limitations.">
+<link rel="icon" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/icon.svg" alt=""> SQLiteScope</a>
+    <div class="nav-links">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#themes">Themes</a>
+      <a href="index.html#quickstart">Quick start</a>
+      <a href="docs.html">Documentation</a>
+    </div>
+    <a class="nav-cta" href="https://github.com/connect2sazad/sqlitescope">GitHub</a>
+  </div>
+</nav>
+
+<div class="wrap docs-shell">
+  <aside class="docs-nav">
+    <div class="group">
+      <div class="group-title">Get started</div>
+      <a href="#overview">Overview</a>
+      <a href="#install">Install &amp; run</a>
+      <a href="#build-installers">Build installers</a>
+      <a href="#sample-database">Sample database</a>
+    </div>
+    <div class="group">
+      <div class="group-title">Using the app</div>
+      <a href="#browsing">Browsing &amp; editing data</a>
+      <a href="#filters">Filter examples</a>
+      <a href="#sql-console">SQL console</a>
+      <a href="#schema">Schema &amp; structure tools</a>
+      <a href="#import-export">Import &amp; export</a>
+      <a href="#maintenance">Maintenance tools</a>
+      <a href="#themes-docs">Themes</a>
+    </div>
+    <div class="group">
+      <div class="group-title">Reference</div>
+      <a href="#safety">Safety model</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#security">Security</a>
+      <a href="#limitations">Support &amp; limitations</a>
+      <a href="#structure">Project structure</a>
+      <a href="#changelog">Changelog</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+
+    <h2 id="overview">Overview</h2>
+    <p>SQLiteScope is a desktop SQLite database viewer, editor, and manager built with Electron and Node.js. It uses Electron's built-in SQLite engine, so Windows doesn't need Python, Visual Studio, C++ build tools, or a separate database server.</p>
+    <p>It's aimed at anyone who needs to look inside a <code>.db</code> file and get real work done — browsing rows, editing schema, running SQL, importing CSVs — without opening a terminal or standing up a database server for a single file.</p>
+
+    <h2 id="install">Install &amp; run</h2>
+    <p>Prefer not to build from source? Get the <a href="index.html#download">Windows installer</a> from the home page instead.</p>
+    <p>To run from source, install Node.js 22 or newer, then:</p>
+    <pre><code>git clone https://github.com/connect2sazad/sqlitescope.git
+cd sqlitescope
+npm install
+npm start</code></pre>
+    <p>On <strong>Windows</strong>, double-click <code>Start-SQLiteScope.vbs</code>. Startup stays terminal-free: when dependencies need installing, a native progress window stays visible until it finishes. Timestamped startup and npm diagnostics are written to <code>logs/sqlitescope-startup.log</code>, and a failed setup offers to open that log immediately. Runtime logs are also available from <strong>Help → Open Runtime Logs</strong>. <code>Start-SQLiteScope.bat</code> forwards to the same launcher.</p>
+    <p>On <strong>Linux</strong>:</p>
+    <pre><code>chmod +x start-sqlitescope.sh
+./start-sqlitescope.sh</code></pre>
+    <div class="callout"><strong>Note:</strong> <code>npm run dev</code> starts the app with developer flags enabled, useful when working on SQLiteScope itself.</div>
+
+    <h2 id="build-installers">Build installers</h2>
+    <pre><code>npm run dist:win
+npm run dist:linux</code></pre>
+    <p>The build command downloads the packaging tool (electron-builder) only when you explicitly build a release, so normal installation stays small. The Windows build produces both an installer and a portable executable. Run <code>npm run dist:win</code> on Windows itself.</p>
+    <p>Public releases should be built on the target operating system, code-signed, malware-scanned, and tested on a clean machine — see <code>RELEASE-CHECKLIST.md</code> in the repository. Don't publish an unsigned installer under a commercial brand and expect Windows users to trust it.</p>
+
+    <h2 id="sample-database">Sample database</h2>
+    <p>A ready-to-use database ships at <code>sample/sample-store.db</code>. Recreate it any time with:</p>
+    <pre><code>npm run sample</code></pre>
+
+    <h2 id="browsing">Browsing &amp; editing data</h2>
+    <ul>
+      <li>Open several database files at once and switch between independent tabs.</li>
+      <li>Select multiple files in the native Open dialog, or drag several files into the app.</li>
+      <li>Each tab preserves its current table, page, filter, sorting, view, and SQL draft while you switch databases.</li>
+      <li>Reopening an already-open file activates its existing tab instead of duplicating it.</li>
+      <li>Browse tables and views with pagination, sorting, and SQL filters.</li>
+      <li>Insert, edit, select, duplicate, and safely delete rows. Row edits use primary keys where available and SQLite's <code>rowid</code> otherwise.</li>
+      <li>Views are browse-only for row editing, but their SQL definitions can be created, edited, or dropped.</li>
+      <li>SQLiteScope detects external <code>.db</code> changes and refreshes browse screens automatically — except mid-edit or mid-SQL-work, where it warns and waits for a manual <kbd>F5</kbd> refresh so it doesn't disrupt what you're doing.</li>
+    </ul>
+
+    <h2 id="filters">Filter examples</h2>
+    <p>The Browse filter accepts a SQLite expression — not a full <code>SELECT</code> statement:</p>
+    <pre><code>status = 'active'
+price >= 1000 AND stock > 0
+name LIKE '%server%'
+created_at >= date('now', '-30 days')</code></pre>
+
+    <h2 id="sql-console">SQL console</h2>
+    <p>Run single statements or multi-statement scripts against the active database, with SQL templates for SELECT, COUNT, INSERT, UPDATE, DELETE, and schema definitions. Every database keeps its own query history with timestamps, timing, and result summaries — load or rerun any past query with one click.</p>
+    <p>Specialized SQLite features that depend on free-form grammar, compiled modules, or application-defined code are handled through the SQL console rather than approximated with fixed UI controls. That includes:</p>
+    <ul>
+      <li>Virtual-table modules and FTS/RTree configuration</li>
+      <li>Generated columns</li>
+      <li>UPSERT and RETURNING clauses</li>
+      <li>Common table expressions and window functions</li>
+      <li>Savepoints</li>
+      <li>Custom extensions, application-defined functions, and collations</li>
+      <li>Advanced PRAGMAs</li>
+    </ul>
+    <p>Availability of extension-dependent features depends on the SQLite runtime bundled with the installed Electron version. SQLiteScope doesn't display controls for operations the active runtime can't execute.</p>
+
+    <h2 id="schema">Schema &amp; structure tools</h2>
+    <table>
+      <thead><tr><th>Area</th><th>What you can do</th></tr></thead>
+      <tbody>
+        <tr><td>Tables</td><td>Create, rename, empty, and drop, with confirmation dialogs and transactional rebuilds for structural changes</td></tr>
+        <tr><td>Columns</td><td>Add, rename, remove; set type, default, primary key, AUTOINCREMENT, NOT NULL, UNIQUE</td></tr>
+        <tr><td>Constraints</td><td>Composite primary keys, CHECK expressions, composite foreign keys with ON UPDATE / ON DELETE / MATCH and deferred enforcement</td></tr>
+        <tr><td>Table options</td><td>STRICT tables and WITHOUT ROWID tables</td></tr>
+        <tr><td>Indexes</td><td>Ordinary, unique, expression, ASC/DESC, and partial indexes; drop existing indexes</td></tr>
+        <tr><td>Views &amp; triggers</td><td>Create, inspect, edit, and drop</td></tr>
+        <tr><td>Inspection</td><td>Columns, primary keys, indexes, foreign keys, triggers, and the underlying <code>CREATE</code> SQL for any object</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="import-export">Import &amp; export</h2>
+    <ul>
+      <li>Import CSV rows into an existing table, with detection, type inference, a preview step, transactional import, and cleanup on failure.</li>
+      <li>Export a table or view as CSV or JSON, or export the full database as SQL.</li>
+      <li>Convert <code>.sql</code> or <code>.csv</code> files into <code>.db</code>, <code>.sqlite</code>, <code>.sqlite3</code>, or <code>.db3</code> internally, with integrity validation and automatic cleanup on incomplete output.</li>
+      <li>SQLiteScope includes tested compatibility for phpMyAdmin/MariaDB SQL dumps — including <code>START TRANSACTION</code>, MySQL <code>ALTER TABLE</code> primary keys and auto-increment metadata folded into valid SQLite definitions, MySQL unique/secondary keys converted into collision-safe indexes, and <code>CURRENT_TIMESTAMP()</code> defaults normalized.</li>
+    </ul>
+
+    <h2 id="maintenance">Maintenance tools</h2>
+    <ul>
+      <li>Consistent backups and integrity checks, runnable at any time.</li>
+      <li>PRAGMA inspector, plus WAL checkpoint, optimize, analyze, and vacuum.</li>
+      <li>Attach and detach additional databases, and edit safe connection PRAGMAs.</li>
+      <li>Recent Databases list in the native File menu.</li>
+    </ul>
+
+    <h2 id="themes-docs">Themes</h2>
+    <p>SQLiteScope ships with a phpMyAdmin-style theme selector and twelve installed themes — Classic Beauty, Windows XP, Modern Dashboard, Cyber Neon, Dracula Plum, Forest Terminal, Ocean Glass, Rose Quartz, Retro Amber, Midnight Code, Solarized Sand, and High Contrast — plus compact and comfortable density settings. Switch anytime from Preferences; nothing extra to download. See the <a href="index.html#themes">theme gallery</a> on the home page.</p>
+
+    <h2 id="safety">Safety model</h2>
+    <ul>
+      <li>Back up important databases before schema changes or large updates.</li>
+      <li>Destructive UI actions — dropping a table, deleting rows, running a migration — always ask for confirmation first.</li>
+      <li>Every open file has a separate SQLite connection; commands always run against the active tab, not whichever tab you last clicked into.</li>
+      <li>The renderer has no direct filesystem or Node.js access. Database work runs through an isolated preload API, renderer Node integration is disabled, and context isolation is enabled.</li>
+      <li>A restrictive Content Security Policy blocks remote scripts and connections. External links are denied inside the app and opened in the system browser instead.</li>
+      <li>SQLite files and SQL can contain hostile content — only open files you trust, and don't run unknown SQL against valuable data.</li>
+    </ul>
+
+    <h2 id="privacy">Privacy</h2>
+    <p>SQLiteScope is local-first software:</p>
+    <ul>
+      <li>Database files are opened directly from locations you select.</li>
+      <li>Database contents are never uploaded, synchronized, sold, or shared by the app.</li>
+      <li>No analytics, telemetry, advertising SDK, or user account system.</li>
+      <li>Recent file paths and your selected theme are stored locally in Electron's application-data directory.</li>
+      <li>Export and backup files are written only to destinations you choose.</li>
+      <li>No network access is required for normal database use. The Documentation menu opens this website in your system browser.</li>
+    </ul>
+    <p>You remain responsible for access controls, backups, and the confidentiality of database and exported files on your own device.</p>
+
+    <h2 id="security">Security</h2>
+    <p>Security fixes are provided for the latest published major version. If you find a vulnerability, don't publish it — or an exploitable sample database — in a public issue. Contact the maintainer privately through the security-contact method listed on the official release page, and include the affected version, operating system, reproduction steps, and impact, with any real credentials or personal data removed.</p>
+    <p>Official installers should be code-signed and accompanied by SHA-256 checksums. Don't install binaries from unverified mirrors.</p>
+
+    <h2 id="limitations">Support &amp; limitations</h2>
+    <ul>
+      <li>SQLiteScope edits SQLite files only — it's not a MySQL/PostgreSQL server client.</li>
+      <li>Changes are committed by SQLite immediately unless your SQL explicitly opens a transaction.</li>
+      <li>Encrypted databases require the relevant encryption extension and aren't supported by this build.</li>
+      <li>Very large result sets should be paginated or constrained in SQL — the SQL console currently renders the returned result set in memory.</li>
+      <li>Back up production data before schema changes or bulk SQL operations.</li>
+    </ul>
+
+    <h2 id="structure">Project structure</h2>
+    <pre><code>SQLiteScope/
+├── main.js              Electron main process
+├── preload.js            Isolated bridge exposed to the renderer
+├── src/
+│   ├── database.js       Core database operations
+│   ├── converter.js      SQL/CSV ↔ database conversion
+│   └── workspace.js       Tab and workspace state
+├── renderer/              UI (HTML/CSS/JS)
+├── scripts/               Setup and sample-data scripts
+├── tests/                 Unit tests
+├── sample/                Sample database
+├── PRIVACY.md
+├── SECURITY.md
+├── CHANGELOG.md
+├── RELEASE-CHECKLIST.md
+└── build/                 Icons and packaging resources</code></pre>
+
+    <h2 id="changelog">Changelog</h2>
+    <p>The current release is <strong>5.4.0</strong>. Recent highlights:</p>
+    <ul>
+      <li><strong>5.4.0</strong> — accessible SVG action icons throughout, a persistent sidebar collapse control (<kbd>Ctrl</kbd>+<kbd>B</kbd>), copy-object-name and copy-schema workflows, conflict-safe duplicate-row generation, and new app artwork.</li>
+      <li><strong>5.3.0</strong> — row detail viewer, duplicate-row workflow, one-click value copying, visible-column chooser, frozen selection/action columns, right-click cell copying.</li>
+      <li><strong>5.2.0</strong> — theme gallery expanded to twelve, full phpMyAdmin/MariaDB dump conversion support, MySQL key and timestamp normalization for SQLite.</li>
+      <li><strong>5.1.0</strong> — phpMyAdmin-style theme selector, six curated themes, basic MySQL/phpMyAdmin SQL-dump compatibility.</li>
+      <li><strong>5.0.0</strong> — removed the branded header for more workspace height, reusable color themes, SQL/CSV → database conversion.</li>
+    </ul>
+    <p>Full history: <a href="https://github.com/connect2sazad/sqlitescope/blob/main/CHANGELOG.md">CHANGELOG.md</a> on GitHub.</p>
+
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/icon.svg" alt=""> SQLiteScope</a>
+    <div class="footer-links">
+      <a href="https://github.com/connect2sazad/sqlitescope">GitHub</a>
+      <a href="https://github.com/connect2sazad/sqlitescope/issues">Report an issue</a>
+      <a href="https://github.com/connect2sazad/sqlitescope/blob/main/LICENSE">MIT License</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>

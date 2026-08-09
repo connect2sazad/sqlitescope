@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQLiteScope — a local SQLite database viewer, editor and manager</title>
+<meta name="description" content="SQLiteScope is a free, open-source desktop app for browsing, editing and managing SQLite databases. No server, no telemetry, no cloud — just a fast local tool.">
+<link rel="icon" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/icon.svg" alt=""> SQLiteScope</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#themes">Themes</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#safety">Safety &amp; privacy</a>
+      <a href="docs.html">Documentation</a>
+    </div>
+    <a class="nav-cta" href="#download">Download</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="idx">00</span> / Desktop app · Windows &amp; Linux · v5.4.0</p>
+      <h1>Manage SQLite databases<br>without <span class="grad">fighting the command line.</span></h1>
+      <p class="lede">SQLiteScope is a free, open-source desktop app for browsing, editing and querying SQLite files. It runs on Electron's built-in SQLite engine, so there's nothing extra to install — no Python, no build tools, no database server.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#download">Download for Windows</a>
+        <a class="btn btn-ghost" href="docs.html">Read the docs</a>
+      </div>
+      <div class="hero-meta">
+        <span><i class="dot"></i> No telemetry, ever</span>
+        <span><i class="dot"></i> MIT licensed</span>
+        <span><i class="dot"></i> Node.js 22+ to run from source</span>
+      </div>
+    </div>
+
+    <div class="hero-demo">
+      <div class="demo" data-demo>
+        <div class="demo-titlebar">
+          <span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span>
+          <span>sample-store.db</span>
+        </div>
+        <div class="demo-body">
+          <div class="demo-sidebar">
+            <div class="demo-label">Objects</div>
+            <div class="demo-row active"><span class="sq"></span> customers</div>
+            <div class="demo-row"><span class="sq"></span> orders</div>
+            <div class="demo-row"><span class="sq"></span> products</div>
+            <div class="demo-row"><span class="sq"></span> inventory</div>
+            <div class="demo-label" style="margin-top:10px;">Views</div>
+            <div class="demo-row"><span class="sq"></span> top_sellers</div>
+          </div>
+          <div class="demo-main">
+            <table class="demo-table">
+              <thead><tr><th>id</th><th>name</th><th>stock</th><th>status</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Widget A</td><td>84</td><td><span class="demo-pill">active</span></td></tr>
+                <tr><td>102</td><td>Widget B</td><td>12</td><td><span class="demo-pill">active</span></td></tr>
+                <tr><td>103</td><td>Widget C</td><td>0</td><td><span class="demo-pill">out</span></td></tr>
+                <tr><td>104</td><td>Widget D</td><td>240</td><td><span class="demo-pill">active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="demo-switch" data-swatches></div>
+      </div>
+      <p class="demo-caption" data-demo-caption>Previewing themes</p>
+    </div>
+  </div>
+</header>
+
+<hr class="divider">
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="idx">01</span> / What it does</p>
+      <h2>Everything a SQLite file needs, in one window</h2>
+      <p>Open several databases at once, browse and edit rows, inspect schema, run raw SQL, and keep the file honest with backups and integrity checks.</p>
+    </div>
+    <div class="feature-groups">
+
+      <div class="feature-card">
+        <div class="tag">Browse &amp; edit</div>
+        <h3>Tables, rows, and tabs</h3>
+        <ul>
+          <li>Multiple databases open at once, each in its own tab</li>
+          <li>Sorting, pagination, and SQL-expression filters</li>
+          <li>Insert, edit, duplicate, and safely delete rows</li>
+          <li>Current table, page, and filter are preserved per tab</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag">SQL console</div>
+        <h3>Run real queries</h3>
+        <ul>
+          <li>Multi-statement scripts, not just single SELECTs</li>
+          <li>Templates for SELECT, INSERT, UPDATE, DELETE, and schema</li>
+          <li>Per-database query history with timing and results</li>
+          <li>One-click load and rerun of past queries</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag">Schema design</div>
+        <h3>Structure, not just data</h3>
+        <ul>
+          <li>Create, rename, empty, and drop tables with confirmation</li>
+          <li>Composite foreign keys with ON UPDATE / ON DELETE actions</li>
+          <li>CHECK constraints, STRICT tables, WITHOUT ROWID tables</li>
+          <li>Unique, expression, ordered, and partial indexes</li>
+          <li>Create, edit, and drop views and triggers</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag">Import &amp; export</div>
+        <h3>Move data in and out</h3>
+        <ul>
+          <li>Import CSV rows into an existing table</li>
+          <li>Export a table or view as CSV or JSON</li>
+          <li>Export the full database as SQL</li>
+          <li>Convert <code>.sql</code> / <code>.csv</code> into <code>.db</code>, <code>.sqlite</code>, <code>.sqlite3</code>, <code>.db3</code></li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag">Maintenance</div>
+        <h3>Keep the file healthy</h3>
+        <ul>
+          <li>Consistent backups and integrity checks</li>
+          <li>PRAGMA inspector plus WAL checkpoint, optimize, vacuum</li>
+          <li>Detects external <code>.db</code> changes and refreshes safely</li>
+          <li>Attach and detach databases, edit connection PRAGMAs</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="tag">Look &amp; feel</div>
+        <h3>Twelve installed themes</h3>
+        <ul>
+          <li>phpMyAdmin-style theme selection</li>
+          <li>Compact and comfortable layout density</li>
+          <li>Native file dialogs and a normal resizable window</li>
+          <li>Recent databases in the native File menu</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="themes">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="idx">02</span> / Twelve curated looks</p>
+      <h2>Pick a theme, not a compromise</h2>
+      <p>Switch anytime from Preferences. Every theme ships with the app — nothing to download separately.</p>
+    </div>
+    <div class="theme-strip">
+      <div class="theme-chip"><div class="swatches"><i style="background:#211f49"></i><i style="background:#6f66ff"></i><i style="background:#8f89ff"></i></div><span>Classic Beauty</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#245ecb"></i><i style="background:#3a75e0"></i><i style="background:#ffb400"></i></div><span>Windows XP</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#1c1f2b"></i><i style="background:#2a2f45"></i><i style="background:#4fc3f7"></i></div><span>Modern Dashboard</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#0d0221"></i><i style="background:#170a33"></i><i style="background:#ff2fd0"></i></div><span>Cyber Neon</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#241b30"></i><i style="background:#2f2340"></i><i style="background:#bd93f9"></i></div><span>Dracula Plum</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#0f1f16"></i><i style="background:#152a1d"></i><i style="background:#4fd97f"></i></div><span>Forest Terminal</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#0b2438"></i><i style="background:#123350"></i><i style="background:#4fc3f7"></i></div><span>Ocean Glass</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#2c1720"></i><i style="background:#3a1f2b"></i><i style="background:#ff9ab0"></i></div><span>Rose Quartz</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#1a1305"></i><i style="background:#241b08"></i><i style="background:#ffb020"></i></div><span>Retro Amber</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#12141c"></i><i style="background:#1c1f2b"></i><i style="background:#e6e6e6"></i></div><span>Midnight Code</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#fdf6e3"></i><i style="background:#eee8d5"></i><i style="background:#b58900"></i></div><span>Solarized Sand</span></div>
+      <div class="theme-chip"><div class="swatches"><i style="background:#000000"></i><i style="background:#111111"></i><i style="background:#ffff00"></i></div><span>High Contrast</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="download">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="idx">03</span> / Get the app</p>
+      <h2>Download SQLiteScope</h2>
+      <p>Grab a native installer, or run from source below if your platform isn't listed yet.</p>
+    </div>
+    <div class="download-panel">
+      <div class="download-card">
+        <div class="meta"><strong>Windows installer</strong><span>.exe · NSIS installer + portable build</span></div>
+        <a class="btn btn-primary" href="https://github.com/connect2sazad/sqlitescope/ins/install-sqlite-scope.exe">Download .exe</a>
+      </div>
+      <div class="download-card">
+        <div class="meta"><strong>Linux</strong><span>.AppImage / .deb</span></div>
+        <a class="btn btn-outline-accent" href="https://github.com/connect2sazad/sqlitescope/releases">View releases</a>
+      </div>
+    </div>
+    <div class="callout"><strong>Heads up:</strong> the Windows link above points to <code>github.com/connect2sazad/sqlitescope/ins/install-sqlite-scope.exe</code>, which returns a 404 right now — GitHub doesn't serve files from an <code>/ins/</code> path. Once you publish a release, replace it with the actual asset URL, which will look like <code>github.com/connect2sazad/sqlitescope/releases/download/v5.4.0/SQLiteScope-Setup-5.4.0.exe</code> — copy the exact link from the release page after uploading the <code>.exe</code>.</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="quickstart">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="idx">04</span> / Or run from source</p>
+      <h2>Three commands, no server</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num"></div>
+        <div>
+          <h3>Install Node.js 22 or newer</h3>
+          <p>SQLiteScope runs on Electron, which bundles the SQLite engine — nothing else to install.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num"></div>
+        <div>
+          <h3>Clone and install dependencies</h3>
+          <div class="codebox">git clone https://github.com/connect2sazad/sqlitescope.git
+cd sqlitescope
+npm install</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num"></div>
+        <div>
+          <h3>Start the app</h3>
+          <div class="codebox">npm start</div>
+          <p style="margin-top:10px;">On Windows, double-click <code>Start-SQLiteScope.vbs</code> instead — it stays terminal-free and logs setup to <code>logs/sqlitescope-startup.log</code>. On Linux, run <code>./start-sqlitescope.sh</code>.</p>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:24px;">Want an installer instead of running from source? See <a href="docs.html#build-installers">Build installers</a> in the docs.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="safety">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="idx">05</span> / Trust</p>
+      <h2>Local by default, honest about limits</h2>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="ic">◆</div>
+        <div><h4>No telemetry, no cloud</h4><p>No analytics, advertising, cloud sync, or automatic upload. The renderer has no direct filesystem or Node.js access — database work runs through an isolated preload API.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="ic">◆</div>
+        <div><h4>Confirmations on destructive actions</h4><p>Dropping a table, deleting rows, or running schema migrations always asks first. Back up important databases before large changes.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="ic">◆</div>
+        <div><h4>SQLite files only</h4><p>SQLiteScope is not a MySQL/PostgreSQL client. Encrypted databases need the relevant encryption extension and aren't supported by this build.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="ic">◆</div>
+        <div><h4>Commits happen immediately</h4><p>SQLite commits your SQL right away unless it explicitly opens a transaction — plan bulk edits accordingly.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/icon.svg" alt=""> SQLiteScope</a>
+    <div class="footer-links">
+      <a href="docs.html">Documentation</a>
+      <a href="https://github.com/connect2sazad/sqlitescope">GitHub</a>
+      <a href="https://github.com/connect2sazad/sqlitescope/issues">Report an issue</a>
+      <a href="https://github.com/connect2sazad/sqlitescope/blob/main/LICENSE">MIT License</a>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:14px;">
+    <span class="foot-note">Built by Sazad Ahemad · SQLiteScope 5.4.0</span>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>

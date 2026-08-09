@@ -1,0 +1,7 @@
+node_modules/
+release/
+sqlitescope-startup.log*
+tests/.tmp/
+tests/.tmp/
+*.log
+.DS_Store

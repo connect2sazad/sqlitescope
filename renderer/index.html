@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'">
+  <title>SQLiteScope</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <div class="database-tabs" id="database-tabs" aria-label="Open databases"></div>
+
+    <div class="workspace empty" id="workspace">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-head">
+          <span class="sidebar-title">Database objects</span>
+          <div class="sidebar-head-actions"><button class="mini-button" id="refresh-button" title="Refresh database" aria-label="Refresh database"></button><button class="mini-button" id="sidebar-collapse" title="Collapse sidebar (Ctrl+B)" aria-label="Collapse sidebar"></button></div>
+        </div>
+        <label class="search-box"><span>⌕</span><input id="object-search" placeholder="Filter tables and views"></label>
+        <nav class="main-nav">
+          <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
+          <button class="nav-item" data-view="sql"><span>›_</span> SQL Console</button>
+        </nav>
+        <div class="object-groups" id="object-groups"></div>
+        <div class="sidebar-footer">
+          <button class="button secondary full" id="new-table-button">＋ Create table</button>
+        </div>
+      </aside>
+
+      <main class="content" id="content">
+        <button class="sidebar-restore hidden" id="sidebar-restore" title="Show sidebar (Ctrl+B)" aria-label="Show sidebar"></button>
+        <section class="welcome" id="welcome-view">
+          <div class="welcome-card">
+            <div class="welcome-logo"><img src="../build/icon.svg" alt="SQLiteScope"></div>
+            <p class="eyebrow">LOCAL · PRIVATE · FAST</p>
+            <h1>Manage SQLite databases<br>without fighting the command line.</h1>
+            <p class="welcome-copy">Open a database to browse tables, edit records, inspect schema, run SQL, import CSV files, and create safe backups.</p>
+            <div class="welcome-actions">
+              <button class="button primary large" id="welcome-open">Open a database</button>
+              <button class="button secondary large" id="welcome-create">Create a new database</button>
+              <button class="button secondary large" id="welcome-convert">Convert SQL / CSV</button>
+            </div>
+            <div class="drop-zone" id="drop-zone"><strong>Drop a .db, .sqlite, or .sqlite3 file here</strong><span>Your data remains on your computer.</span></div>
+            <div id="recent-section" class="recent-section hidden"><h3>Recent databases</h3><div id="recent-list"></div></div>
+          </div>
+        </section>
+
+        <section class="view hidden" id="overview-view">
+          <div class="page-heading">
+            <div><p class="eyebrow">DATABASE</p><h1 id="overview-title">Overview</h1><p id="overview-path" class="muted path-text"></p></div>
+            <div class="heading-actions"><button class="button secondary" id="integrity-button">Check integrity</button><button class="button secondary" id="backup-button">Create backup</button></div>
+          </div>
+          <div class="stat-grid" id="stat-grid"></div>
+          <div class="panel">
+            <div class="panel-heading"><div><h2>Database objects</h2><p>Tables and views in this file</p></div><div class="heading-actions"><button class="button secondary small schema-create" data-schema-type="view">Create view</button><button class="button secondary small schema-create" data-schema-type="trigger">Create trigger</button><button class="button primary small" id="overview-new-table">Create table</button></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Rows</th><th>Actions</th></tr></thead><tbody id="overview-objects"></tbody></table></div>
+          </div>
+        </section>
+
+        <section class="view hidden" id="table-view">
+          <div class="page-heading compact">
+            <div><p class="eyebrow" id="object-type-label">TABLE</p><h1 id="table-title"></h1></div>
+            <div class="heading-actions"><button class="button secondary" id="export-button">Export</button><button class="button secondary table-only" id="import-button">Import CSV</button><button class="button primary table-only" id="add-row-button">＋ Add row</button></div>
+          </div>
+          <div class="tabs"><button class="tab active" data-table-tab="browse">Browse</button><button class="tab" data-table-tab="structure">Structure</button><button class="tab" data-table-tab="schema">Create SQL</button></div>
+          <div id="browse-tab" class="tab-panel">
+            <div class="data-toolbar">
+              <form id="filter-form" class="filter-form"><input id="row-filter" placeholder="SQL filter, e.g. status = 'active'"><button class="button secondary small">Apply filter</button><button type="button" class="text-button" id="clear-filter">Clear</button></form>
+              <div class="pagination-size"><button class="button secondary small" id="column-chooser-button" title="Choose visible columns"><span class="button-icon">▥</span> Columns</button><span>Rows per page</span><select id="page-size"><option>25</option><option selected>50</option><option>100</option><option>250</option></select></div>
+            </div>
+            <div class="selection-bar hidden" id="selection-bar"><span id="selection-count">0 rows selected</span><button class="button danger small" id="delete-selected">Delete selected</button></div>
+            <div class="table-wrap data-table-wrap"><table class="data-table"><thead id="data-head"></thead><tbody id="data-body"></tbody></table><div class="empty-state hidden" id="rows-empty"><strong>No rows found</strong><span>Add a row or change the current filter.</span></div></div>
+            <div class="pager"><span id="row-summary"></span><div><button class="mini-button" id="prev-page">←</button><span id="page-summary"></span><button class="mini-button" id="next-page">→</button></div></div>
+          </div>
+          <div id="structure-tab" class="tab-panel hidden"></div>
+          <div id="schema-tab" class="tab-panel hidden"><div class="schema-toolbar"><button class="button secondary small" id="copy-schema">Copy schema SQL</button></div><pre class="code-block" id="schema-code"></pre></div>
+        </section>
+
+        <section class="view hidden" id="sql-view">
+          <div class="page-heading"><div><p class="eyebrow">QUERY TOOL</p><h1>SQL Console</h1><p class="muted">Execute a single query or a multi-statement SQL script.</p></div><button class="button secondary" id="sql-clear">Clear</button></div>
+          <div class="query-toolbar"><select id="query-template"><option value="">Query template…</option><option value="select">SELECT rows</option><option value="count">COUNT rows</option><option value="insert">INSERT row</option><option value="update">UPDATE rows</option><option value="delete">DELETE rows</option><option value="create">CREATE definition</option></select><button class="button secondary small" id="query-history-button">Query history</button><button class="button secondary small" id="database-tools-button">Database tools</button></div>
+          <div class="sql-editor-wrap"><div class="editor-toolbar"><span>SQL</span><span class="shortcut">Run: Ctrl + Enter</span></div><textarea id="sql-editor" spellcheck="false">SELECT name, type, sql
+FROM sqlite_schema
+WHERE name NOT LIKE 'sqlite_%'
+ORDER BY type, name;</textarea><div class="sql-actions"><button class="button primary" id="run-sql">▶ Run query</button></div></div>
+          <div class="panel sql-results"><div class="panel-heading"><div><h2>Results</h2><p id="sql-result-meta">Run a query to see its result.</p></div></div><div id="sql-result-body" class="result-placeholder">Query results will appear here.</div></div>
+          <div class="panel query-history-panel"><div class="panel-heading"><div><h2>Recent queries</h2><p>History is stored locally for this database.</p></div><button class="text-button danger-text" id="clear-query-history">Clear history</button></div><div id="query-history-list" class="query-history-list"><div class="result-placeholder">No queries executed yet.</div></div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modal-backdrop">
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+      <div class="modal-head"><div><p class="eyebrow" id="modal-eyebrow">EDIT</p><h2 id="modal-title"></h2></div><button class="icon-button" id="modal-close">×</button></div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+  <input type="file" id="csv-input" accept=".csv,text/csv" hidden>
+  <div class="toast-region" id="toast-region"></div>
+  <script src="app.js"></script>
+</body>
+</html>
